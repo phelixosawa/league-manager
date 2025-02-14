@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football League Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Football Leagues Manager</h1>
+
+    <form action="{{ url_for('create_league') }}" method="post">
+        <input type="text" name="league_name" placeholder="Enter League Name" required>
+        <button type="submit">Create League</button>
+    </form>
+
+    <h2>Leagues</h2>
+    <ul>
+        {% for league in leagues %}
+            <li>
+                <a href="{{ url_for('view_league', league_id=league.id) }}">{{ league.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

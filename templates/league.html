@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ league.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>{{ league.name }}</h1>
+    <h2>Teams</h2>
+
+    <form action="{{ url_for('add_team', league_id=league.id) }}" method="post">
+        <input type="text" name="team_name" placeholder="Enter Team Name" required>
+        <button type="submit">Add Team</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Team Name</th>
+                <th>P</th>
+                <th>W</th>
+                <th>L</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th>GD</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ team.name }}</td>
+                <td>{{ team.played }}</td>
+                <td>{{ team.wins }}</td>
+                <td>{{ team.losses }}</td>
+                <td>{{ team.goals_for }}</td>
+                <td>{{ team.goals_against }}</td>
+                <td>{{ team.goal_difference }}</td>
+                <td>{{ team.points }}</td>
+            </tr>
+            {% endfor %}            
+        </tbody>
+    </table>
+
+    <h2>Fixtures</h2>
+    <ul>
+        {% for match in matches %}
+            <li>
+                {{ match.team_a.name }} VS {{ match.team_b.name }}
+                {% if match.played %}
+                    ({{match.team_a_score}} - {{match.team_b_score}})
+                {% else %}
+                    <form action="{{ url_for('update_match', match_id=match.id) }}" method="post">
+                        <input type="number" name="team_a_score" min="0" required>
+                        <input type="number" name="team_b_score" min="0" required>
+                        <button type="submit">Submit Scores</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <form action="{{ url_for('delete_league', league_id=league.id) }}" method="post">
+        <button type="submit">Delete League</button>
+    </form>
+
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>
